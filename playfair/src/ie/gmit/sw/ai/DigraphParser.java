@@ -12,28 +12,15 @@ import java.util.List;
  * of encrypted text.
  */
 public class DigraphParser {
-	
-	/*
-	 * A list of digraphs that have been parsed.
-	 */
-	private List<char[]> digraphs;
-	
-	/**
-	 * This method returns a list of parsed digraphs.
-	 * @return a list of parsed digraphs.
-	 */
-	public List<char[]> getDigraphs() {
-		return digraphs;
-	}
 
 	/**
-	 * /**
 	 * This method parses a file at the given path to a collection of digraphs.
 	 * @param path to the file.
+	 * @return a list of digrpahs.
 	 * @throws IOException if the specified file does not exist or cannot be opened.
 	 */
-	public void parse(String path) throws IOException {
-		digraphs = new LinkedList<char[]>();
+	public List<char[]> parse(String path) throws IOException {
+		List<char[]> digraphs = new LinkedList<char[]>();
 
 		BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(path)));
 		int character, index = 0;
@@ -41,16 +28,19 @@ public class DigraphParser {
 
 		// Loop through each character in the file.
 		while ((character = br.read()) != -1) {
-			digraph[index] = (char) character;
+			digraph[index] = Character.toUpperCase((char) character);
 			index++;
 			
 			if (index == 2) {
 				digraphs.add(digraph);
+				digraph = new char[2];
 				index = 0;
 			}
 		}
 		
 		// Tidy up resources when finished.
 		br.close();
+		
+		return digraphs;
 	}
 }

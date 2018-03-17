@@ -1,6 +1,7 @@
 package ie.gmit.sw.ai;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Scanner;
 
 /**
@@ -18,6 +19,7 @@ public class CipherBreaker {
 		
 		boolean isParsed = false;
 		DigraphParser parser = new DigraphParser();
+		List<char[]> digraphs = null;
 		
 		do {
 			// Prompt the user to enter the path to the file containing the encrypted text.
@@ -26,9 +28,9 @@ public class CipherBreaker {
 						
 			// Parse the encrypted file into digraphs.
 			try {
-				parser.parse(path);
+				digraphs = parser.parse(path);
 				isParsed = true;
-				System.out.println(String.format("Parsed %d digraphs", parser.getDigraphs().size()));
+				System.out.println(String.format("Parsed %d digraphs", digraphs.size()));
 			} catch (IOException e) {
 				System.out.println("Unable to parse file! Please try again...");
 			}
@@ -36,6 +38,9 @@ public class CipherBreaker {
 		
 		// Create a new random key.
 		Keyable key = new PlayfairKey();
+		
+		// Create a new decrypter.
+		PlayfairDecrypter decrypter = new PlayfairDecrypter();
 		
 		// Tidy up resources when finished.
 		scanner.close();
