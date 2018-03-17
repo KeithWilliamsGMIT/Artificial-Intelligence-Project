@@ -25,7 +25,7 @@ public class CipherBreaker {
 			// Prompt the user to enter the path to the file containing the encrypted text.
 			System.out.println("Please enter the path for the encrypted file");
 			String path = scanner.nextLine();
-						
+			
 			// Parse the encrypted file into digraphs.
 			try {
 				digraphs = parser.parse(path);
@@ -42,6 +42,23 @@ public class CipherBreaker {
 		// Create a new decrypter.
 		PlayfairDecrypter decrypter = new PlayfairDecrypter();
 		
+		Heuristic heuristic = null;
+		isParsed = false;
+		
+		do {
+			// Prompt the user to enter the path to the file containing the n-grams.
+			System.out.println("Please enter the path for the n-grams file");
+			String path = scanner.nextLine();
+			
+			try {
+				heuristic = new Heuristic(path);
+				isParsed = true;
+				System.out.println("Successfully parsed file.");
+			} catch (IOException e) {
+				System.out.println("Unable to parse file! Please try again...");
+			}
+		} while(!isParsed);
+				
 		// Tidy up resources when finished.
 		scanner.close();
 	}
