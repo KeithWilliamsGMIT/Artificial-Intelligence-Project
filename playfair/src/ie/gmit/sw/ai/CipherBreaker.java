@@ -1,0 +1,43 @@
+package ie.gmit.sw.ai;
+
+import java.io.IOException;
+import java.util.Scanner;
+
+/**
+ * This is a runner class to start the application.
+ */
+public class CipherBreaker {
+	
+	/**
+	 * This is the entrypoint to the application.
+	 * @param args
+	 */
+	public static void main(String[] args) {
+		// Create a scanner to read input.
+		Scanner scanner = new Scanner(System.in);
+		
+		boolean isParsed = false;
+		DigraphParser parser = new DigraphParser();
+		
+		do {
+			// Prompt the user to enter the path to the file containing the encrypted text.
+			System.out.println("Please enter the path for the encrypted file");
+			String path = scanner.nextLine();
+						
+			// Parse the encrypted file into digraphs.
+			try {
+				parser.parse(path);
+				isParsed = true;
+				System.out.println(String.format("Parsed %d digraphs", parser.getDigraphs().size()));
+			} catch (IOException e) {
+				System.out.println("Unable to parse file! Please try again...");
+			}
+		} while(!isParsed);
+		
+		// Create a new random key.
+		Keyable key = new PlayfairKey();
+		
+		// Tidy up resources when finished.
+		scanner.close();
+	}
+}

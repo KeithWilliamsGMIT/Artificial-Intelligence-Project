@@ -7,7 +7,7 @@ import java.util.List;
 /**
  * This class is responsible for generating and manipulating keys.
  */
-public class Key {
+public class PlayfairKey implements Keyable {
 	/*
 	 * The letter 'J' is missing from the Playfair cypher.
 	 */
@@ -29,7 +29,7 @@ public class Key {
 	 * This implicit default constructor generates a random key of unique
 	 * letters.
 	 */
-	public Key() {
+	public PlayfairKey() {
 		for (char c : ALPHABET.toCharArray()) {
 			key.add(c);
 		}
@@ -38,16 +38,14 @@ public class Key {
 	}
 	
 	/**
-	 * This method returns the key.
-	 * @return the key.
+	 * {@inheritDoc}
 	 */
 	public List<Character> getKey() {
 		return key;
 	}
 	
 	/**
-	 * This method randomly shuffles the key. The key can be potentially
-	 * shuffled in several different ways.
+	 * {@inheritDoc}
 	 */
 	public void shuffleKey() {
 		// Generate a random number between 0 and 100 to determine how to
