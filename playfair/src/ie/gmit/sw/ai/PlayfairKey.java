@@ -38,6 +38,15 @@ public class PlayfairKey implements Keyable {
 	}
 	
 	/**
+	 * This constructor generates a new key from another key.
+	 */
+	public PlayfairKey(Keyable key) {
+		for (char c : key.getKey()) {
+			this.key.add(c);
+		}
+	}
+	
+	/**
 	 * {@inheritDoc}
 	 */
 	public List<Character> getKey() {
@@ -73,7 +82,11 @@ public class PlayfairKey implements Keyable {
 	private void swapSingleLetter() {
 		// Get two random indices from the list.
 		int i1 = (int) (Math.random() * key.size());
-		int i2 = (int) (Math.random() * key.size());
+		int i2;
+		
+		do {
+			i2 = (int) (Math.random() * key.size());
+		} while (i1 == i2);
 		
 		// Swap the two elements at the given indices.
 		swapElements(i1, i2);
@@ -86,7 +99,11 @@ public class PlayfairKey implements Keyable {
 		// Get two random numbers between 0 and 4.
 		// These will be the rows to swap.
 		int r1 = (int) (Math.random() * MATRIX_SIZE);
-		int r2 = (int) (Math.random() * MATRIX_SIZE);
+		int r2;
+		
+		do {
+			r2 = (int) (Math.random() * MATRIX_SIZE);
+		} while (r1 == r2);
 		
 		// Swap the two rows.
 		for (int i = 0; i < MATRIX_SIZE; i++) {
@@ -103,8 +120,12 @@ public class PlayfairKey implements Keyable {
 	private void swapRandomColumns() {
 		// Get two random numbers between 0 and 4.
 		// These will be the columns to swap.
-		int c1 = (int) (Math.random() * MATRIX_SIZE);
-		int c2 = (int) (Math.random() * MATRIX_SIZE);
+		int c1 = (int) (Math.random() * MATRIX_SIZE);	
+		int c2;
+		
+		do {
+			c2 = (int) (Math.random() * MATRIX_SIZE);
+		} while (c1 == c2);
 		
 		// Swap the two columns.
 		for (int i = 0; i < MATRIX_SIZE; i++) {

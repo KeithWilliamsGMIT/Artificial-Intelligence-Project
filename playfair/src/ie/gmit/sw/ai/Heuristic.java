@@ -38,16 +38,16 @@ public class Heuristic {
 	}
 	
 	/**
-	 * This method calculates the the score, h(n), for an encrypted string as a
+	 * This method calculates the the score, h(n), for a decrypted string as a
 	 * log probability.
-	 * @param encryptedText to score.
+	 * @param decryptedText to score.
 	 * @return the score.
 	 */
-	public double logProbability(String encryptedText) {
+	public double logProbability(String decryptedText) {
 		double score = 0;
 		
-		for (int i = 0; i < encryptedText.length() - N_GRAM_SIZE + 1; i++) {
-			Integer count = ngrams.get(encryptedText.substring(i, i + N_GRAM_SIZE));
+		for (int i = 0; i < decryptedText.length() - N_GRAM_SIZE + 1; i++) {
+			Integer count = ngrams.get(decryptedText.substring(i, i + N_GRAM_SIZE));
 			
 			if (count != null) {
 				score += Math.log10(count / totalNgrams);

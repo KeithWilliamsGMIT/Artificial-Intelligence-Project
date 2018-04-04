@@ -36,12 +36,6 @@ public class CipherBreaker {
 			}
 		} while(!isParsed);
 		
-		// Create a new random key.
-		Keyable key = new PlayfairKey();
-		
-		// Create a new decrypter.
-		PlayfairDecrypter decrypter = new PlayfairDecrypter();
-		
 		Heuristic heuristic = null;
 		isParsed = false;
 		
@@ -58,7 +52,17 @@ public class CipherBreaker {
 				System.out.println("Unable to parse file! Please try again...");
 			}
 		} while(!isParsed);
-				
+		
+		// Find the key to decrypt the text.
+		KeyFinder finder = new KeyFinder();
+		Keyable key = finder.find(heuristic, digraphs);
+		
+		PlayfairDecrypter decrypter = new PlayfairDecrypter();
+		String decryptedText = decrypter.decrypt(key, digraphs);
+		
+		System.out.println(key);
+		System.out.println("DECRYPTED TEXT: " + decryptedText);
+			
 		// Tidy up resources when finished.
 		scanner.close();
 	}
