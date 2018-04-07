@@ -3,6 +3,7 @@ package ie.gmit.sw.ai;
 import java.io.IOException;
 import java.util.List;
 import java.util.Scanner;
+import java.util.concurrent.TimeUnit;
 
 /**
  * This is a runner class to start the application.
@@ -36,6 +37,16 @@ public class CipherBreaker {
 			}
 		} while(!isParsed);
 		
+		int slidingWindowSize = 0;
+		
+		do {
+			// Prompt the user to choose how much to move the sliding window when calculating the log probability.
+			System.out.println("Please choose how far to move the sliding window when calculating the log probability");
+			System.out.println("1) Move it the same number of characters as the n-gram size at a time (Better for larger samples - Quicker)");
+			System.out.println("2) Move it one character at a time (Better for smaller samples - More accurate)");
+			slidingWindowSize = scanner.nextInt() - 1;
+		} while(slidingWindowSize != 0 && slidingWindowSize != 1);
+		
 		Heuristic heuristic = null;
 		isParsed = false;
 		
@@ -45,7 +56,7 @@ public class CipherBreaker {
 			String path = scanner.nextLine();
 			
 			try {
-				heuristic = new Heuristic(path);
+				heuristic = new Heuristic(path, slidingWindowSize);
 				isParsed = true;
 				System.out.println("Successfully parsed file.");
 			} catch (IOException e) {
@@ -53,16 +64,35 @@ public class CipherBreaker {
 			}
 		} while(!isParsed);
 		
+		char ynOption = 0;
+		boolean debug = true;
+		
+		do {
+			// Prompt the user to enter a number indicating if debugging information should be outputted.
+			System.out.println("Should additional debugging information be outputted? Y/N");
+			ynOption = scanner.next().toLowerCase().toCharArray()[0];
+		} while(ynOption != 'y' && ynOption != 'n');
+		
+		if (ynOption == 'n') {
+			debug = false;
+		}
+		
+		long begin = System.nanoTime();
+		
 		// Find the key to decrypt the text.
 		KeyFinder finder = new KeyFinder();
-		Keyable key = finder.find(heuristic, digraphs);
+		Keyable key = finder.find(heuristic, digraphs, debug);
 		
 		PlayfairDecrypter decrypter = new PlayfairDecrypter();
 		String decryptedText = decrypter.decrypt(key, digraphs);
 		
 		System.out.println(key);
 		System.out.println("DECRYPTED TEXT: " + decryptedText);
-			
+		
+		long end = System.nanoTime();
+		
+		System.out.println("DECRYPTED IN " + TimeUnit.NANOSECONDS.toSeconds(end - begin) + " secs");
+		
 		// Tidy up resources when finished.
 		scanner.close();
 	}

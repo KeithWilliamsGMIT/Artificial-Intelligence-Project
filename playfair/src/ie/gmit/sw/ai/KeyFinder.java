@@ -21,7 +21,7 @@ public class KeyFinder {
 	 * @param digraphs to decrypt.
 	 * @return the generated key outputted from the simulated annealing algorithm.
 	 */
-	public Keyable find(Heuristic heuristic, List<char[]> digraphs) {
+	public Keyable find(Heuristic heuristic, List<char[]> digraphs, boolean debug) {
 		// Generate a random 25 letter key called parent.
 		Keyable parent = new PlayfairKey();
 		Keyable child;
@@ -35,8 +35,17 @@ public class KeyFinder {
 		double logProbabilityParent = heuristic.logProbability(decrypter.decrypt(parent, digraphs));
 		double logProbabilityChild = 0;
 		
-		for (int temp = 10; temp > 0; temp--) {
-			for (int transitions = 20000; transitions > 0; transitions--) {
+		int betterKeysGenerated = 0;
+		int worseKeysGenerated = 0;
+		int initialTemp = 10;
+		int initialTransitions = 50000;
+		
+		if (debug) {
+			System.out.println("INITIAL SCORE: " + logProbabilityParent);
+		}
+		
+		for (int temp = initialTemp; temp > 0; temp--) {
+			for (int transitions = initialTransitions; transitions > 0; transitions--) {
 				// Set child = shuffleKey(parent)
 				child = new PlayfairKey(parent);
 				child.shuffleKey();
@@ -51,14 +60,28 @@ public class KeyFinder {
 					// New key is better so set parent = child
 					parent = child;
 					logProbabilityParent = logProbabilityChild;
+					betterKeysGenerated++;
 				} else if (delta != 0) {
 					// New key is worse
-					if (1.0 / Math.exp(-delta / temp) > Math.random()) {
+					if (Math.exp(delta / temp) >= Math.random()) {
 						parent = child;
 						logProbabilityParent = logProbabilityChild;
+						worseKeysGenerated++;
 					}
 				}
 			}
+			
+			if (debug) {
+				System.out.println("TEMP: " + temp);
+				System.out.println("FITNESS SCORE: " + logProbabilityParent);
+			}
+		}
+		
+		if (debug) {
+			System.out.println("BETTER KEYS GENERATED: " + betterKeysGenerated);
+			System.out.println("WORSE KEYS GENERATED: " + worseKeysGenerated);
+			System.out.println("TOTAL KEYS GENERATED: " + (betterKeysGenerated + worseKeysGenerated));
+			System.out.println("TOTAL ITERATIONS: " + (initialTemp * initialTransitions));
 		}
 		
 		// Return the final key.

@@ -27,14 +27,26 @@ public class Heuristic {
 	 */
 	private double totalNgrams;
 	
+	/*
+	 * This number indicates how far the sliding window moves to the right when calculating the log probability.
+	 */
+	private int slidingWindowSize;
+	
 	/**
 	 * This constructor creates a new instance this class and parses a set of
 	 * n-grams from the file at the given path.
 	 * @param path containing the n-grams.
+	 * @param slidingWindowSize indicates how many n-grams are sampled.
 	 * @throws IOException if the file containing the n-grams does not exist.
 	 */
-	public Heuristic(String path) throws IOException {
+	public Heuristic(String path, int slidingWindowSize) throws IOException {
 		parseNgrams(path);
+		
+		if (slidingWindowSize == 0) {
+			this.slidingWindowSize = N_GRAM_SIZE;
+		} else {
+			this.slidingWindowSize = slidingWindowSize;
+		}
 	}
 	
 	/**
@@ -46,15 +58,15 @@ public class Heuristic {
 	public double logProbability(String decryptedText) {
 		double score = 0;
 		
-		for (int i = 0; i < decryptedText.length() - N_GRAM_SIZE + 1; i++) {
+		for (int i = 0; i <= decryptedText.length() - N_GRAM_SIZE; i += slidingWindowSize) {
 			Integer count = ngrams.get(decryptedText.substring(i, i + N_GRAM_SIZE));
 			
 			if (count != null) {
-				score += Math.log10(count / totalNgrams);
+				score += Math.log10(count);
 			}
 		}
 		
-		return score;
+		return score / Math.log10(totalNgrams);
 	}
 	
 	/*

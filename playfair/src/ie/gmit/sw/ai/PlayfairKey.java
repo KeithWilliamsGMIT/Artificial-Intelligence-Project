@@ -41,9 +41,7 @@ public class PlayfairKey implements Keyable {
 	 * This constructor generates a new key from another key.
 	 */
 	public PlayfairKey(Keyable key) {
-		for (char c : key.getKey()) {
-			this.key.add(c);
-		}
+		this.key = new ArrayList<Character>(key.getKey());
 	}
 	
 	/**
