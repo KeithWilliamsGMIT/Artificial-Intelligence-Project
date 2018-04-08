@@ -35,11 +35,12 @@ The simulated annealing algorithm works by generating a child key by making a ch
 
 ### Additional Features
 The following features were added to the project.
++ The most important additional feature in this project is the ability to create a number of threads each with a randomly generated Playfair key. The simulated annealing algorithm is executed in different threads and the best key is choosen. This helps reduce the impact of a bad initial key being generated. The more threads that are created the greater the likelyhood of finding a good key. Of course this has the downside of possibly taking much longer depending on how many threads the user chose to create. This feature uses an ExecutorService, Callables and Futures.
 + The user can input the number of characters the sliding window can move when calculating the log probability of decrypted plain-text. For smaller samples it is preferred to move one character at a time as more n-grams are sampled. For larger samples it is preferred to move n characters where n is the size of the n-grams as it is faster.
-+ The user can choose to run the application in debug mode which outputs additional information from the simulated annealing algorithm to the screen. For example, the fitness of the key after each iteration of the temperature and how many keys were generated in total. The goal of this feature is to give the user a better understanding of how the simulated annealing algorithm works. When the debugging option is not set the application simply outputs the decrypted text along with the key used to decrypt it. The total time taken to execute the simulated annealing algorithm is also given.
++ The user can choose to run the application in debug mode which outputs additional information from the simulated annealing algorithm to the screen. For example, the fitness of the key after each iteration of the temperature and how many keys were generated in total. The goal of this feature is to give the user a better understanding of how the simulated annealing algorithm works. When the debugging option is not set the application simply outputs the decrypted text along with the key used to decrypt it. This option is only available when the user chooses not to run multiple threads. The total time taken to execute the simulated annealing algorithm is also given.
 
 ### Conclusion
-This was my first attempt at using a heuristic informed search. I found it to be an interesting problem with several aspect. Finding the correct cooling schedule seemed to be trial and error. This lead the simulated annealing algorithm getting stuck at a local optima early on, resulting in the algorithm behaving like a standard hill climbing algorithm. Despite looking I could not find a good guideline for consistantly chosing a good cooling schedule. However, I was able to decrypt a number of encrypted text files to readable text. The below table describes the parameters used to descripe given files.
+This was my first attempt at using a heuristic informed search. I found it to be an interesting problem with several aspect. Finding the good values for the temperature and transitions seemed to be trial and error. This lead the simulated annealing algorithm getting stuck at a local optima early on, resulting in the algorithm behaving like a standard hill climbing algorithm. Despite looking I could not find a good guideline for consistantly chosing good values for these variables. However, I was able to decrypt a number of encrypted text files to readable text. The below table describes the parameters that worked for me to decrypt given files.
 
 | File Description               | Digraphs |Temperature | Transitions | Window Distance |
 |--------------------------------|----------|------------|-------------|-----------------|
@@ -47,6 +48,7 @@ This was my first attempt at using a heuristic informed search. I found it to be
 | Hobbit                         | 18371    | 15         | 30000       | 4               |
 | Hints                          | 371      | 10         | 50000       | 1               |
 
-I realised the following from running these tests is that:
+I realised the following from running these tests:
 1. The temperature and number of transitions can have a big impact on the final result.
 2. The heuristic is crucial for converging on the correct key.
+3. The initial key can influence the result.
