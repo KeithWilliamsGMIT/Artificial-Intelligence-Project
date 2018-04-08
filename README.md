@@ -44,7 +44,7 @@ This was my first attempt at using a heuristic informed search. I found it to be
 | File Description               | Digraphs |Temperature | Transitions | Window Distance |
 |--------------------------------|----------|------------|-------------|-----------------|
 | Hobbit (First 2000 characters) | 1000     | 10         | 50000       | 4               |
-| Hobbit                         | 18371    | 15         | 20000       | 4               |
+| Hobbit                         | 18371    | 15         | 30000       | 4               |
 | Hints                          | 371      | 10         | 50000       | 1               |
 
 I realised the following from running these tests is that:

@@ -19,9 +19,12 @@ public class KeyFinder {
 	 * heuristic and the simulated annealing algorithm.
 	 * @param heuristic to measure the fitness of decrypted text.
 	 * @param digraphs to decrypt.
+	 * @param initialTemp is the starting temperature.
+	 * @param initialTransitions is the number of transitions that occur at each iteration.
+	 * @param debug will output additional information if true.
 	 * @return the generated key outputted from the simulated annealing algorithm.
 	 */
-	public Keyable find(Heuristic heuristic, List<char[]> digraphs, boolean debug) {
+	public Keyable find(Heuristic heuristic, List<char[]> digraphs, int initialTemp, int initialTransitions, boolean debug) {
 		// Generate a random 25 letter key called parent.
 		Keyable parent = new PlayfairKey();
 		Keyable child;
@@ -37,8 +40,6 @@ public class KeyFinder {
 		
 		int betterKeysGenerated = 0;
 		int worseKeysGenerated = 0;
-		int initialTemp = 10;
-		int initialTransitions = 50000;
 		
 		if (debug) {
 			System.out.println("INITIAL SCORE: " + logProbabilityParent);
